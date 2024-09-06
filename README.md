@@ -1,6 +1,9 @@
 ### EX9 Preprocessing on Twitter Data using Rapidminer
+
 ### DATE: 
+
 ### AIM: To implement preprocessing technique on Twitter Data using Rapidminer
+
 ### Description: 
 <div align = "justify">
 RapidMiner provides data mining and machine learning procedures including: data loading and transformation (ETL), data preprocessing and visualization, 
@@ -11,9 +14,11 @@ other programs or used as an API. Individual functions can be called from the co
 RapidMiner provides learning schemes, models and algorithms and can be extended using R and Python scripts.
 
 ### Procedure:
+
 1) ***Import Twitter data:*** Import the Twitter data into RapidMiner. You can do this by selecting the appropriate
 data source operator, such as "Read Excel" or "Read CSV," and specifying the location of your Twitter data
 file.
+
 2) ***Preprocess data:*** Preprocess the imported data to clean and prepare it for text processing. Use the following
 operators for preprocessing:
     <p>a. Tokenize: Split the text into individual words or tokens.
@@ -21,10 +26,25 @@ operators for preprocessing:
     <p>c. Remove Stopwords: Remove common words that do not provide much meaningful information.
     <p>d. Remove Special Characters: Eliminate special characters, such as punctuation marks or symbols.
     <p>e. Remove Numbers: Exclude numeric values from the text.
+    
 3) ***Stemming:*** Apply stemming to reduce words to their root forms. You can use operators like "Stem (Porter)"
 for this purpose.
 
 
 ### Output:
 
+#### Import Twitter data
+![image](https://github.com/user-attachments/assets/9e24ce75-f573-436b-8c7c-3d634f82b361)
+
+#### Preprocess data
+![image](https://github.com/user-attachments/assets/ec4074ef-810f-4f0a-8288-ce264950707e)
+
+
+#### Stemming 
+![image](https://github.com/user-attachments/assets/1f253da3-8dee-4380-b934-354f9647191e)
+
+![image](https://github.com/user-attachments/assets/3fc562dd-60e3-4f3f-b72b-305927cded76)
+
+
 ### Result:
+Thus the implement preprocessing technique on Twitter Data using Rapidminer is executed successful.
