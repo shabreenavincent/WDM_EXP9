@@ -1,50 +1,122 @@
-### EX9 Preprocessing on Twitter Data using Rapidminer
-
-### DATE: 
-
-### AIM: To implement preprocessing technique on Twitter Data using Rapidminer
-
+### EX8 Web Scraping On E-commerce platform using BeautifulSoup
+### Date:
+### AIM: To perform Web Scraping on Amazon using (beautifulsoup) Python.
 ### Description: 
 <div align = "justify">
-RapidMiner provides data mining and machine learning procedures including: data loading and transformation (ETL), data preprocessing and visualization, 
-predictive analytics and statistical modeling, evaluation, and deployment. RapidMiner is written in the Java programming language. 
-RapidMiner provides a GUI to design and execute analytical workflows. Those workflows are called “Processes” in RapidMiner and they consist of multiple “Operators”. 
-Each operator performs a single task within the process, and the output of each operator forms the input of the next one. Alternatively, the engine can be called from 
-other programs or used as an API. Individual functions can be called from the command line. 
-RapidMiner provides learning schemes, models and algorithms and can be extended using R and Python scripts.
+Web scraping is the process of extracting data from various websites and parsing it. In other words, it’s a technique 
+to extract unstructured data and store that data either in a local file or in a database. 
+There are many ways to collect data that involve a huge amount of hard work and consume a lot of time. Web scraping can save programmers many hours. Beautiful Soup is a Python web scraping library that allows us to parse and scrape HTML and XML pages. 
+One can search, navigate, and modify data using a parser. It’s versatile and saves a lot of time.
+<p>The basic steps involved in web scraping are:
+<p>1) Loading the document (HTML content)
+<p>2) Parsing the document
+<p>3) Extraction
+<p>4) Transformation
 
 ### Procedure:
 
-1) ***Import Twitter data:*** Import the Twitter data into RapidMiner. You can do this by selecting the appropriate
-data source operator, such as "Read Excel" or "Read CSV," and specifying the location of your Twitter data
-file.
+1) Import necessary libraries (requests, BeautifulSoup, re, matplotlib.pyplot).
+2) Define convert_price_to_float(price) Function: to Remove non-numeric characters from a price string and convert it to a float.
+3) Define get_amazon_products(search_query) Function: to Scrape Amazon for product information based on the search query.
+4) Fetch and parse the HTML content then Extract product names and prices from the search results and Sort product information based on converted prices in ascending order.
+5) Return sorted product data as a list of dictionaries.
+6) Call get_amazon_products(search_query) to get product data based on the user's search query.
+7) Check if products are found; if not, display "No products found."
+8) Visualize Product Data using a Bar Chart
 
-2) ***Preprocess data:*** Preprocess the imported data to clean and prepare it for text processing. Use the following
-operators for preprocessing:
-    <p>a. Tokenize: Split the text into individual words or tokens.
-    <p>b. Transform Cases: Convert the text to lowercase or uppercase to ensure consistency.
-    <p>c. Remove Stopwords: Remove common words that do not provide much meaningful information.
-    <p>d. Remove Special Characters: Eliminate special characters, such as punctuation marks or symbols.
-    <p>e. Remove Numbers: Exclude numeric values from the text.
-    
-3) ***Stemming:*** Apply stemming to reduce words to their root forms. You can use operators like "Stem (Porter)"
-for this purpose.
+### Program:
+```
+NAME : KEERTHANA S
+REG NO : 212222230066
+```
+```PYTHON
+import requests
+from bs4 import BeautifulSoup
+import matplotlib.pyplot as plt
+import re
 
+def convert_price_to_float(price_str):
+    # Remove currency symbols and commas, then convert to float
+    clean_price = re.sub(r'[^\d.]', '', price_str)  # Keep digits and decimal point
+    return float(clean_price) if clean_price else 0.0
+```
+```py
+def get_snapdeal_products(search_query):
+    url = f'https://www.snapdeal.com/search?keyword={search_query.replace(" ", "%20")}'
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36'
+    }
+
+    response = requests.get(url, headers=headers)
+    products_data = []
+
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        products = soup.find_all('div', {'class': 'product-tuple-listing'})
+
+        for product in products:
+            title = product.find('p', {'class': 'product-title'})
+            price = product.find('span', {'class': 'product-price'})
+            if price:
+                product_price = convert_price_to_float(price.get('data-price', '0'))
+            else:
+                product_price = 0.0  # Default to 0 if no price found
+            rating = product.find('div', {'class': 'filled-stars'})  # Assuming rating is shown with this class
+
+            if title and price:
+                product_name = title.text.strip()
+                #product_price = re.sub(r'[^\d.]', '', price.text.strip())  # Remove non-numeric chars for price
+                product_rating = rating['style'].split(';')[0].split(':')[-1] if rating else "No rating"
+                products_data.append({
+                    'Product': product_name,
+                    'Price': float(product_price),
+                    'Rating': product_rating
+                })
+                print(f'Product: {product_name}')
+                print(f'Price: {product_price}')
+                print(f'Rating: {product_rating}')
+                print('---')
+
+    else:
+        print('Failed to retrieve content')
+
+    return products_data
+```
+```py
+# Main execution block
+if __name__ == "__main__":
+    search_query = input('Enter product to search on Snapdeal: ')
+    products = get_snapdeal_products(search_query)
+
+def visualize_product_data(products):
+    if products:
+        # Preparing data for plotting
+        #product_names = [product['Product'][:25] + '...' if len(product['Product']) > 25 else product['Product'] for product in products]
+        product_names = [product['Product'] for product in products]
+        product_prices = [product['Price'] for product in products]
+
+        # Creating the bar chart
+        plt.figure(figsize=(12, 8))
+        bars = plt.barh(product_names, product_prices, color='skyblue')  # Horizontal bar chart
+
+        plt.xlabel('Price in INR')  # Label for x-axis
+        plt.ylabel('Product')  # Label for y-axis
+        plt.title(f'Prices of Products on Snapdeal')
+        plt.tight_layout()
+        # Displaying the plot
+        plt.show()
+    else:
+        print('No products to display.')
+visualize_product_data(products)
+
+```
 
 ### Output:
+![image](https://github.com/Prethiveerajan/WDM_EXP8/assets/94233064/fd292cb6-f464-4775-97aa-75a4918bd341)
 
-#### Import Twitter data
-![image](https://github.com/user-attachments/assets/9e24ce75-f573-436b-8c7c-3d634f82b361)
-
-#### Preprocess data
-![image](https://github.com/user-attachments/assets/ec4074ef-810f-4f0a-8288-ce264950707e)
-
-
-#### Stemming 
-![image](https://github.com/user-attachments/assets/1f253da3-8dee-4380-b934-354f9647191e)
-
-![image](https://github.com/user-attachments/assets/3fc562dd-60e3-4f3f-b72b-305927cded76)
+![image](https://github.com/Prethiveerajan/WDM_EXP8/assets/94233064/06e512be-2973-41e6-955c-e192dc2db093)
 
 
 ### Result:
-Thus the implement preprocessing technique on Twitter Data using Rapidminer is executed successful.
+
+Thus, To perform Web Scraping on Amazon using (beautifulsoup) Python has been executed successfully.
